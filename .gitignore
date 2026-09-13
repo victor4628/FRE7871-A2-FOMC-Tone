@@ -1,0 +1,20 @@
+# Generated and downloaded data remain local.
+data/
+outputs/
+
+# Keep only the final submitted report under output/.
+output/*
+!output/pdf/
+output/pdf/*
+!output/pdf/assignment2_report.pdf
+
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+.env
+tmp/
+download.log
+

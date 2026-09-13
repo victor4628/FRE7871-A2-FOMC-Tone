@@ -1,0 +1,2 @@
+# Keep PDFs byte-exact; newline conversion invalidates their xref offsets.
+*.pdf binary
