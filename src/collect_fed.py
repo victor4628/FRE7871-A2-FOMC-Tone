@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import hashlib
 import json
 import re
 import time
@@ -28,7 +29,7 @@ from .config import (
 )
 
 
-USER_AGENT = "FRE-GY-7871A-course-project/1.0 (public academic data collection)"
+USER_AGENT = "Mozilla/5.0 (compatible; FOMC academic research)"
 MONTHS = [
     "january", "february", "march", "april", "may", "june",
     "july", "august", "september", "october", "november", "december",
@@ -57,11 +58,18 @@ def _session() -> requests.Session:
 
 
 def _get(session: requests.Session, url: str, attempts: int = 4) -> requests.Response:
+    cache = RAW_DIR / "source_files" / hashlib.sha256(url.encode()).hexdigest()
+    if cache.exists():
+        response = requests.Response()
+        response.status_code, response._content, response.url = 200, cache.read_bytes(), url
+        return response
     error: Exception | None = None
     for attempt in range(attempts):
         try:
             response = session.get(url, timeout=45)
             response.raise_for_status()
+            cache.parent.mkdir(parents=True, exist_ok=True)
+            cache.write_bytes(response.content)
             return response
         except requests.RequestException as exc:
             error = exc
@@ -80,7 +88,7 @@ def _chair_for_date(value: str) -> str:
     return "Warsh" if value >= WARSH_START else "Powell"
 
 
-def _parse_time(value: str | None, default: str = "12:00") -> str:
+def _parse_time(value: str | None, default: str = "") -> str:
     if not value:
         return default
     match = re.search(r"(\d{1,2})(?::(\d{2}))?\s*([ap])\.?m\.?", value, re.I)
@@ -121,10 +129,10 @@ def _pdf_text(session: requests.Session, url: str) -> str:
 
 def _month_events(session: requests.Session, year: int, month: int) -> list[dict[str, str]]:
     url = f"{FED_BASE}/newsevents/{year}-{MONTHS[month - 1]}.htm"
-    response = session.get(url, timeout=45)
-    if response.status_code == 404:
+    try:
+        response = _get(session, url, attempts=1)
+    except RuntimeError:
         return []
-    response.raise_for_status()
     soup = BeautifulSoup(response.content, "lxml")
     events: list[dict[str, str]] = []
     for row in soup.select(".panel-body > .row"):
@@ -153,7 +161,7 @@ def _calendar_time(
     kind: str,
     surname: str = "",
     title: str = "",
-    default: str = "12:00",
+    default: str = "",
 ) -> tuple[str, str]:
     stamp = pd.Timestamp(release_date)
     key = (stamp.year, stamp.month)
@@ -167,16 +175,16 @@ def _calendar_time(
         candidates = [e for e in candidates if lowered_kind in e["description"].lower()]
     if surname:
         surname_matches = [e for e in candidates if surname.lower() in e["description"].lower()]
-        candidates = surname_matches or candidates
+        candidates = surname_matches
     if title and len(candidates) > 1:
         title_words = set(re.findall(r"[a-z]{4,}", title.lower()))
         candidates.sort(
             key=lambda e: len(title_words & set(re.findall(r"[a-z]{4,}", e["title"].lower()))),
             reverse=True,
         )
-    if candidates:
+    if candidates and candidates[0]["time"]:
         return candidates[0]["time"], "Federal Reserve events calendar"
-    return default, "document-type default; calendar time unavailable"
+    return default, "scheduled time; calendar unavailable" if default else "unknown; no source time"
 
 
 def _record(
@@ -203,7 +211,7 @@ def _collect_meeting_documents(
     session: requests.Session, calendar_cache: dict[tuple[int, int], list[dict[str, str]]]
 ) -> list[FedDocument]:
     calendar_urls = [FOMC_CALENDAR_URL] + [
-        f"{FED_BASE}/monetarypolicy/fomchistorical{year}.htm" for year in (2018, 2019, 2020)
+        f"{FED_BASE}/monetarypolicy/fomchistorical{year}.htm" for year in range(2018, pd.Timestamp(AS_OF_DATE).year - 5)
     ]
     soups = [BeautifulSoup(_get(session, url).content, "lxml") for url in calendar_urls]
     documents: list[FedDocument] = []
@@ -342,7 +350,7 @@ def _collect_chair_indexes(
                     subtype,
                     surname=expected,
                     title=title,
-                    default="12:00",
+                    default="",
                 )
                 if release_text:
                     release_time, source = _parse_time(release_text), "article release line"

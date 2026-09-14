@@ -1,23 +1,25 @@
 # AI use disclosure
 
-**Tools used:** OpenAI Codex.
+**Tool used:** OpenAI Codex.
 
-**What I used them for:** I used Codex extensively to read the assignment and the
-course presentation, design the event study, write and debug the data collectors,
-implement the monetary-policy phrase list and FinBERT anchor method, run the
-regressions and forecasts, create the saved-output notebook, write tests, and draft
-the report and exhibits.
+**Scope of use.** I used Codex extensively to read and compare the assignment and
+the supplied literature, inspect the earlier repository, design the research
+plan, revise the Federal Reserve and market-data collectors, implement text
+selection and three scoring methods, write tests, run regressions and forecasts,
+create the saved-output notebook, and draft and format the report.
 
-**What I contributed:** I supplied the assignment prompt and the course's *Parsing
-the Fed* presentation, selected English as the submission language, confirmed my
-name and NYU NetID, and approved the scope, event-window convention, and forecast
-design after discussing the choices with Codex.
+**Human inputs and decisions.** I supplied the assignment and reference folder,
+asked that existing published word lists be preferred to a newly invented list,
+required a sensible use of FinBERT, reviewed the proposed methods, authorized the
+implementation, and completed the Hugging Face login and gated-model request.
+Because author approval remained pending, Codex trained the clearly disclosed
+temporal RoBERTa reproduction from the authors' public pre-2020 labels. I remain
+responsible for reviewing the results and submission.
 
-**Limitations and checks:** The analysis is reproducible from public sources, but I
-am responsible for the final submission and interpretation. The report discloses
-that same-day statements and press conferences cannot be separated with daily
-data, that the two tone methods disagree on some Warsh-era documents, and that no
-tone coefficient is statistically significant at the 10 percent level. Automated
-tests verify score direction, event-date alignment, policy-decision labels, and
-probability arithmetic.
-
+**Verification and limitations.** The dictionary is traced to a fixed author-code
+revision and its known quirks are preserved and disclosed. Model revisions and
+label mappings are checked programmatically. Tests cover negation, rule conflict
+precedence, speaker and minutes selection, market closing times, missing controls,
+and exact-close roll-forward. The report discloses the short Warsh sample, shared
+statement/press-conference daily windows, noncausal daily regressions, the distinct
+meaning of FinBERT sentiment, and dependence of the forecast on market pricing.

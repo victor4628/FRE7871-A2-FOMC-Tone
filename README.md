@@ -1,39 +1,61 @@
 # Assignment 2: FOMC Communication and Asset Prices
 
 **Victor Chen (yc8027)** - FRE-GY 7871 A, Fall 2026
+Information cutoff: **September 13, 2026**
 
-This project collects 315 Federal Reserve communications from February 2018
-through September 13, 2026, compares Powell- and Warsh-era tone with a contextual
-monetary-policy phrase list and FinBERT anchors, tests daily market reactions, and
-forecasts the September 2026 FOMC meeting.
+This repository analyzes 313 Federal Reserve communications released from Jerome
+Powell's first day as Chair through the last pre-meeting information date. It
+compares the Powell and Kevin Warsh periods using three deliberately distinct
+text measures:
 
-## Main submission files
+1. the published monetary-policy rule in Shah, Paturi, and Chava (ACL 2023);
+2. a RoBERTa-large reproduction trained on their public 1996-2019 labels; and
+3. `ProsusAI/finbert` financial sentiment, kept as sentiment rather than relabeled
+   as hawkishness.
 
-- `assignment2.ipynb` - viewable notebook with all outputs saved
+Daily DXY, 10s2s, 1-year Treasury, and IWF-minus-IWN changes are tested with the
+DGS3MO change as a control. The event study preserves missing observations and
+uses source-specific closing conventions. Results are descriptive daily
+associations, not high-frequency causal communication shocks.
+
+## Submission files
+
+- `assignment2.ipynb` - viewable notebook with saved outputs
 - `output/pdf/assignment2_report.pdf` - short report for Brightspace
-- `AI_USE.md` - complete AI-use disclosure
-- `METHODOLOGY.md` - detailed definitions and modeling choices
-- `src/` - collectors, scoring, regressions, forecasting, and plotting
-- `tests/` - numerical and timing checks
+- `AI_USE.md` - AI-use disclosure
+- `METHODOLOGY.md` - definitions, provenance, and limitations
+- `src/` - collection, preprocessing, scoring, event-study, and forecast code
+- `tests/` - targeted score and event-window checks
+
+Raw, intermediate, model, and derived data are excluded from Git as required.
 
 ## Reproduce
 
-```bash
+```powershell
 python -m pip install -r requirements.txt
-python scripts/run_all.py --refresh --rescore
-python scripts/build_notebook.py
-python scripts/build_report.py
+python -m src.train_temporal_roberta
+$env:FOMC_MODEL_PATH = "data/models/fomc-roberta-temporal"
+python scripts/run_v2.py --refresh-documents --refresh-market --rescore
+python scripts/build_notebook_v2.py
+python scripts/build_report_v2.py
 ```
 
-`ProsusAI/finbert` is downloaded from Hugging Face on the first scoring run. Raw
-and intermediate data are intentionally excluded from Git. See `RUNNING_zh.md`
-for Chinese setup notes.
+The official FOMC-RoBERTa checkpoint is gated. First request access at
+<https://huggingface.co/gtfintechlab/FOMC-RoBERTa>, then run `hf auth login` with
+a read-only token. The current saved results use the disclosed temporal
+reproduction because the official access request was still awaiting author review.
+After approval, remove `FOMC_MODEL_PATH`; the scoring code will use the official
+checkpoint directly.
+See `RUNNING_zh.md` for Windows instructions.
 
-## Data sources
+## Primary sources
 
-- [Federal Reserve FOMC calendars and documents](https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm)
-- [Federal Reserve H.15 Treasury data](https://www.federalreserve.gov/datadownload/Choose.aspx?rel=H15)
-- Yahoo Finance: `DX-Y.NYB`, `IWF`, and `IWN`
-- Hugging Face: `ProsusAI/finbert`
+- [Federal Reserve FOMC calendars](https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm)
+- [FRED T10Y2Y](https://fred.stlouisfed.org/series/T10Y2Y),
+  [DGS1](https://fred.stlouisfed.org/series/DGS1), and
+  [DGS3MO](https://fred.stlouisfed.org/series/DGS3MO)
+- Yahoo Finance tickers `DX-Y.NYB`, `IWF`, and `IWN`
+- [Shah, Paturi, and Chava (2023)](https://aclanthology.org/2023.acl-long.368/)
+- [ProsusAI/finbert](https://huggingface.co/ProsusAI/finbert)
 
-The forecast is an academic exercise and is not investment advice.
+The forecast and position are an academic exercise.
