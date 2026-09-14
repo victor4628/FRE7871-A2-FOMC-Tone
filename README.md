@@ -3,7 +3,7 @@
 **Victor Chen (yc8027)** - FRE-GY 7871 A, Fall 2026
 Information cutoff: **September 13, 2026**
 
-This repository analyzes 313 Federal Reserve communications released from Jerome
+This repository analyzes 310 Federal Reserve communications released from Jerome
 Powell's first day as Chair through the last pre-meeting information date. It
 compares the Powell and Kevin Warsh periods using three deliberately distinct
 text measures:
@@ -17,6 +17,11 @@ Daily DXY, 10s2s, 1-year Treasury, and IWF-minus-IWN changes are tested with the
 DGS3MO change as a control. The event study preserves missing observations and
 uses source-specific closing conventions. Results are descriptive daily
 associations, not high-frequency causal communication shocks.
+
+The meeting forecast is generated internally from pre-meeting text. A regularized
+multinomial model combines the previous decision with the latest statement,
+minutes, and intermeeting Chair scores. No CME or other market-implied decision
+probability enters the forecast.
 
 ## Submission files
 

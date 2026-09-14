@@ -22,4 +22,7 @@ label mappings are checked programmatically. Tests cover negation, rule conflict
 precedence, speaker and minutes selection, market closing times, missing controls,
 and exact-close roll-forward. The report discloses the short Warsh sample, shared
 statement/press-conference daily windows, noncausal daily regressions, the distinct
-meaning of FinBERT sentiment, and dependence of the forecast on market pricing.
+meaning of FinBERT sentiment, and the small decision-model sample. The final
+forecast does not use an external market probability. It uses a time-ordered
+pre-meeting decision model and reports its comparison with a previous-decision-only
+baseline.

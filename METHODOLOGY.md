@@ -8,10 +8,12 @@ The information set ends September 13, 2026. The release sample begins February
 release date. `meeting_chair` separately records that the minutes released on
 February 21, 2018 concerned Janet Yellen's final meeting.
 
-The raw inventory contains 315 records. Two nonmeeting press releases captured by
-the broad calendar link pattern - the March 31, 2020 FIMA facility announcement
-and the August 27, 2020 strategy-review announcement - are retained locally but
-excluded from the statement sample, leaving 313 documents.
+The raw inventory contains 315 records. Five nonmeeting monetary-policy releases
+captured by the broad calendar link pattern are retained locally but excluded:
+the October 11, 2019 reserve-management decision; the March 23 and March 31, 2020
+emergency-facility announcements; and the August 27, 2020 and August 22, 2025
+strategy-review statements. The scored sample therefore contains 310 documents,
+including 69 post-meeting statements.
 
 Web navigation, voting lists, contact text, PDF page furniture, references, and
 footnotes are excluded. Press-conference scoring includes Chair prepared remarks
@@ -85,17 +87,35 @@ association; it cannot isolate a causal wording surprise from concurrent news.
 
 ## Forecast
 
-The rate-decision distribution starts from the September 11 CME FedWatch reading
-of an 85% probability of a 25bp hike, with 14% hold and a 1% tail probability of
-a cut. The 64% probability of a more hawkish statement incorporates the hot
-August CPI/PPI data, resilient August employment, Warsh's August 28 price-stability
-emphasis, and the July statement reference point.
+The rate probabilities are generated entirely inside the project. For each
+historical meeting, the predictors use only information released strictly before
+the statement: the previous decision; published-dictionary and RoBERTa scores for
+the previous statement; the latest minutes; and the mean of Chair communications
+released since the previous meeting. A three-class L2-regularized multinomial
+logit is fitted to 68 usable meeting rows. Numeric features are median-imputed and
+standardized inside each training fold; the previous decision is one-hot encoded.
+No CME or other market-implied probability is used.
 
-Expected future text levels use historical median statement changes conditional
-on the two policy-specific measures moving more or less hawkishly. For each market
-indicator, the forecast averages the three statement-regression predictions and
-uses residual variance plus between-method dispersion for the sign probability.
-The DGS3MO forecast input is zero basis points: the already-priced policy decision
-is not mechanically converted into a bill-yield surprise. This means the market
-forecast is mainly the estimated text-associated component and remains sensitive
-to an unexpected decision.
+The expanding-window backtest begins after 20 meetings and contains 48 genuine
+out-of-sample forecasts. The text model has 72.9% accuracy, 0.711 log loss, and
+0.408 multiclass Brier score. A previous-decision-only baseline has 62.5%
+accuracy, 0.795 log loss, and 0.458 Brier score. Thus the pre-meeting language
+improves all three recorded decision metrics. The September forecast is 6% cut,
+73% hold, and 21% hike; relative to the baseline, text shifts probability from a
+cut toward a hike while hold remains the modal outcome.
+
+A statement is defined as more hawkish when the equal-weight change in the two
+policy-specific scores is positive. Beta(1,1)-smoothed historical tone rates are
+calculated separately after cuts, holds, and hikes, then weighted by the internally
+predicted decision probabilities. This produces a 44% probability that the next
+statement is more hawkish than July 29. This separate tone estimate did not beat
+an expanding unconditional-frequency benchmark on Brier score, so it is retained
+as a required low-confidence forecast rather than evidence of added predictive
+power. Expected score levels combine the July score with historical median
+changes under more- and less-hawkish outcomes.
+
+For each market indicator, the forecast averages the three statement-regression
+predictions and uses residual variance plus between-method dispersion for the sign
+probability. DGS3MO is set to zero, so the market table is a conditional estimate
+of the language-associated component rather than a full unexpected-rate-action
+scenario. The recommendation is therefore deliberately small.

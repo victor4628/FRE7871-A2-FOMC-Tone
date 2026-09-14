@@ -28,6 +28,11 @@ pooled=table3[table3['Document type']=='Pooled'][['Indicator','Tone method','Ton
 specific=table3[table3['Document type']!='Pooled'][['Document type','Indicator','Tone method','Tone coefficient','Tone p-value','Tone coefficient excluding 2020','N']].round(4)
 market=pd.DataFrame(forecast['market_reaction']).T
 rate=pd.DataFrame.from_dict(forecast['rate_probabilities'],orient='index',columns=['Probability (%)'])
+pm=forecast['premeeting_model']
+validation=pd.DataFrame([
+ {'Model':'Previous decision only',**pm['baseline_backtest']},
+ {'Model':'Previous decision + pre-meeting tone',**pm['backtest']},
+]).set_index('Model').round(3)
 
 cells=[
  md('''# Assignment 2: FOMC Communication and Asset Prices
@@ -92,21 +97,28 @@ standard errors prevent treating their duplicated returns as independent.'''),
 deviation text score and the matching-window DGS3MO change. Pooled regressions add
 document-type fixed effects and a Warsh indicator; uncertainty is clustered by
 event end date. Coefficients estimate daily conditional association, not a
-high-frequency causal wording shock.'''),
+high-frequency causal wording shock. At the pooled level, only FinBERT-DXY reaches
+10% significance. Type-specific clues are stronger: more-hawkish minutes are
+associated with a flatter 10s2s curve, while more-positive statements are
+associated with higher 1-year yields.'''),
  md('## Type-specific and 2020-exclusion checks'),
  code("table3.query(\"`Document type` != 'Pooled'\")",specific,7),
  md('## September 15-16, 2026 forecast'),
  code("pd.DataFrame.from_dict(forecast['rate_probabilities'],orient='index',columns=['Probability (%)'])",rate,8),
- md(f"Probability the statement is more hawkish than July 29: **{forecast['more_hawkish_probability']}%**."),
- code("pd.DataFrame(forecast['market_reaction']).T",market,9),
+ md('''These probabilities come from an L2-regularized multinomial model using only
+the previous decision and the dictionary/RoBERTa scores of the previous statement,
+latest minutes, and intermeeting Chair communications. No CME or other market
+probability is used.'''),
+ code("pd.DataFrame([{'Model':'Previous decision only',**forecast['premeeting_model']['baseline_backtest']},{'Model':'Previous decision + pre-meeting tone',**forecast['premeeting_model']['backtest']}]).set_index('Model')",validation,9),
+ md(f"Probability the statement is more hawkish than July 29: **{forecast['more_hawkish_probability']}%**. This weights historical tone-change rates after each decision by the internally predicted decision probabilities."),
+ code("pd.DataFrame(forecast['market_reaction']).T",market,10),
  md(f"""**Position:** {forecast['recommendation']['position']}
 
 {forecast['recommendation']['rationale']}<br>
 **Falsifier:** {forecast['recommendation']['falsifier']}
 
-The 85% hike base is the September 11 CME FedWatch reading. The market estimates
-set the DGS3MO change to zero rather than pretending an already-priced 25bp hike
-is a 25bp surprise."""),
+The market estimates set DGS3MO to zero, so they represent the conditional
+language-associated component rather than a separate rate-surprise forecast."""),
  md('''## Comparison with the required readings
 
 **How You Say It Matters (2021).** That study separates qualitative wording from
@@ -127,7 +139,7 @@ stance, avoiding a positive=dovish or negative=hawkish relabeling.'''),
 Targeted tests cover the published rule, negation, conflict precedence, reporter
 exclusion, minutes sections, equity versus Treasury closing times, missing
 controls, and exact-close roll-forward.'''),
- code("!python -m pytest tests/test_scoring_v2.py tests/test_events_v2.py -q",'9 passed',10)
+ code("!python -m pytest tests -q",'12 passed',11)
  ])
 nb=nbf.v4.new_notebook(cells=cells)
 nb.metadata.kernelspec={'display_name':'Python 3','language':'python','name':'python3'}

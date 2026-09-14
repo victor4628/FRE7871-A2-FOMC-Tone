@@ -98,8 +98,14 @@ def score_documents(documents: pd.DataFrame, refresh=False, methods=('finbert','
             if not texts:
                 continue
             sample = 'full_prose' if method == 'finbert' else 'policy_target'
-            key = hashlib.sha256((VERSION+method+sample+doc.selected_sha256+str(MODELS[method])+os.environ.get('FOMC_MODEL_PATH','')).encode()).hexdigest()
+            identity=method+sample+doc.selected_sha256+str(MODELS[method])+os.environ.get('FOMC_MODEL_PATH','')
+            key = hashlib.sha256((VERSION+identity).encode()).hexdigest()
             cache = INTERIM_DIR/'sentence_cache'/f'{key}.json'
+            legacy_key=hashlib.sha256(('selection-v2-20260913'+identity).encode()).hexdigest()
+            legacy_cache=INTERIM_DIR/'sentence_cache'/f'{legacy_key}.json'
+            if not cache.exists() and legacy_cache.exists() and not refresh:
+                cache.parent.mkdir(parents=True,exist_ok=True)
+                cache.write_bytes(legacy_cache.read_bytes())
             if cache.exists() and not refresh:
                 payload = json.loads(cache.read_text()); prob=np.array(payload['prob']); chunks=payload['chunks']
             else:

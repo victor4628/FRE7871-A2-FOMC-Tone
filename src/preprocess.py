@@ -5,7 +5,14 @@ import re
 import pandas as pd
 from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktParameters
 
-VERSION = 'selection-v2-20260913'
+VERSION = 'selection-v3-20260913'
+NONMEETING_STATEMENTS = {
+    '2019-10-11',  # Reserve-management implementation decision.
+    '2020-03-23',  # Emergency credit and asset-purchase facilities.
+    '2020-03-31',  # FIMA repo facility.
+    '2020-08-27',  # Longer-run strategy review.
+    '2025-08-22',  # Longer-run strategy review.
+}
 params = PunktParameters()
 params.abbrev_types = {'u.s', 'mr', 'mrs', 'ms', 'dr', 'st', 'a.m', 'p.m', 'e.g', 'i.e'}
 SPLITTER = PunktSentenceTokenizer(params)
@@ -52,8 +59,8 @@ def selected_segments(text: str, subtype: str) -> list[tuple[str, str]]:
 def prepare_documents(raw: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     docs, sentences = [], []
     for row in raw.to_dict('records'):
-        if row['subtype'] == 'statement' and row['release_date'] in {'2020-03-31', '2020-08-27'}:
-            continue  # Facility announcement / strategy review, not meeting statements.
+        if row['subtype'] == 'statement' and row['release_date'] in NONMEETING_STATEMENTS:
+            continue
         row['raw_sha256'] = hashlib.sha256(row['text'].encode()).hexdigest()
         row['selection_version'] = VERSION
         match = re.search(r'(?:fomcminutes|monetary|FOMCpresconf)(\d{8})', row['source_url'])
