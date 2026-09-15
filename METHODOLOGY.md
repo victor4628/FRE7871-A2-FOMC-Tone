@@ -108,7 +108,9 @@ A statement is defined as more hawkish when the equal-weight change in the two
 policy-specific scores is positive. Beta(1,1)-smoothed historical tone rates are
 calculated separately after cuts, holds, and hikes, then weighted by the internally
 predicted decision probabilities. This produces a 44% probability that the next
-statement is more hawkish than July 29. This separate tone estimate did not beat
+statement is more hawkish than July 29 and a 56% probability that it is not more
+hawkish (less hawkish or unchanged). This is a relative-change forecast, not an
+absolute hawkish/dovish classification. The separate tone estimate did not beat
 an expanding unconditional-frequency benchmark on Brier score, so it is retained
 as a required low-confidence forecast rather than evidence of added predictive
 power. Expected score levels combine the July score with historical median
@@ -118,4 +120,6 @@ For each market indicator, the forecast averages the three statement-regression
 predictions and uses residual variance plus between-method dispersion for the sign
 probability. DGS3MO is set to zero, so the market table is a conditional estimate
 of the language-associated component rather than a full unexpected-rate-action
-scenario. The recommendation is therefore deliberately small.
+scenario. Because all four sign probabilities remain close to 50% and expected
+changes are small relative to residual uncertainty, the recommendation is to
+remain neutral rather than enter a directional pre-meeting position.
