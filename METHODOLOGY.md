@@ -121,5 +121,5 @@ predictions and uses residual variance plus between-method dispersion for the si
 probability. DGS3MO is set to zero, so the market table is a conditional estimate
 of the language-associated component rather than a full unexpected-rate-action
 scenario. Because all four sign probabilities remain close to 50% and expected
-changes are small relative to residual uncertainty, the recommendation is to
-remain neutral rather than enter a directional pre-meeting position.
+changes are small relative to residual uncertainty, they are presented only as
+low-confidence academic model outputs. No investment recommendation is made.

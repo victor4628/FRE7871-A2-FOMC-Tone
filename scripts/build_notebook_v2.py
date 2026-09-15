@@ -112,13 +112,11 @@ probability is used.'''),
  code("pd.DataFrame([{'Model':'Previous decision only',**forecast['premeeting_model']['baseline_backtest']},{'Model':'Previous decision + pre-meeting tone',**forecast['premeeting_model']['backtest']}]).set_index('Model')",validation,9),
  md(f"Statement versus July 29: **{forecast['more_hawkish_probability']}% more hawkish** and **{forecast['not_more_hawkish_probability']}% not more hawkish**. The second category includes a less-hawkish or unchanged statement; this is a relative-change forecast, not an absolute hawkish/dovish label. The probabilities weight historical tone-change rates after each decision by the internally predicted decision probabilities."),
  code("pd.DataFrame(forecast['market_reaction']).T",market,10),
- md(f"""**Recommendation:** {forecast['recommendation']['position']}
-
-{forecast['recommendation']['rationale']}<br>
-**What would make this wrong:** {forecast['recommendation']['falsifier']}
-
-The market estimates set DGS3MO to zero, so they represent the conditional
-language-associated component rather than a separate rate-surprise forecast."""),
+ md("""The market estimates set DGS3MO to zero, so they represent the conditional
+language-associated component rather than a separate rate-surprise forecast.
+All four direction probabilities remain close to 50%, and the expected changes
+are small relative to residual uncertainty. These are low-confidence academic
+model outputs; no investment recommendation is made."""),
  md('''## Comparison with the required readings
 
 **How You Say It Matters (2021).** That study separates qualitative wording from

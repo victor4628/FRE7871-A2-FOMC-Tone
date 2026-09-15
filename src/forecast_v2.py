@@ -44,8 +44,6 @@ def forecast(scores: pd.DataFrame,events: pd.DataFrame) -> dict:
                          'prediction_interval_80':[point-critical*sigma,point+critical*sigma]}
         method_predictions[label]=details
     p_hawk_percent=int(round(100*p_hawk))
-    sign_probabilities=[value['probability_rise'] for value in reaction.values()]
-    curve_interval=reaction['10s2s (bp)']['prediction_interval_80']
     out={'as_of':AS_OF_DATE,'meeting_date':'2026-09-16','rate_probabilities':rate,
          'rate_probability_source':'Internal pre-meeting tone model; no CME or other market-implied probability used',
          'premeeting_model':premeeting,
@@ -54,10 +52,6 @@ def forecast(scores: pd.DataFrame,events: pd.DataFrame) -> dict:
          'previous_statement':'2026-07-29',
          'expected_scores':expected,'market_reaction':reaction,'method_predictions':method_predictions,
          'forecast_control_assumption_bp':0,
-         'recommendation':{
-          'position':'Stay neutral and take no directional pre-meeting position.',
-          'rationale':f'The four market-direction probabilities span only {min(sign_probabilities)}% to {max(sign_probabilities)}%, while the expected changes are small relative to residual uncertainty.',
-          'falsifier':f'The no-trade recommendation would be wrong if the statement-day 10s2s change fell outside its model-implied 80% interval of {curve_interval[0]:+.1f} to {curve_interval[1]:+.1f} bp, revealing materially more event risk than forecast.'},
          'interpretation':'Daily conditional association, not a causal high-frequency surprise estimate.'}
     (OUTPUT_DIR/'forecast_v2.json').write_text(json.dumps(out,indent=2),encoding='utf-8')
     return out
