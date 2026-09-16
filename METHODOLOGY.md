@@ -123,3 +123,30 @@ of the language-associated component rather than a full unexpected-rate-action
 scenario. Because all four sign probabilities remain close to 50% and expected
 changes are small relative to residual uncertainty, they are presented only as
 low-confidence academic model outputs. No investment recommendation is made.
+
+## Qualitative scenario analysis
+
+This separate scenario discussion does not alter the model probabilities or its
+conditional market estimates. In a hawkish hold scenario, language that keeps a
+near-term hike firmly in play could raise two-year yields more than ten-year
+yields and produce a bear flattening of the 10s2s curve. In a hike scenario, the
+curve could steepen after its initial front-end reaction. The hike may reduce
+near-term inflation concerns and the perceived need for additional tightening,
+while persistent fiscal-deficit concerns and a higher term premium continue to
+place upward pressure on long-term Treasury yields.
+
+A wider U.S.-Japan interest-rate differential could also increase the probability
+that the Japanese authorities intervene by buying yen and selling dollars. The
+U.S. Treasury's expanded long-end buybacks may partially offset the rise in
+long-term yields, but they are not assumed to be the dominant force.
+
+Context sources:
+
+- U.S. Treasury, [Treasury Announces Increased Sizes of Nominal Long-End Liquidity
+  Support Buybacks Beginning September 9](https://home.treasury.gov/news/press-releases/sb0607),
+  August 19, 2026.
+- Bank of Japan, [Statement on Monetary Policy](https://www.boj.or.jp/en/mopo/mpmdeci/mpr_2026/k260731a.pdf),
+  July 31, 2026, and [Summary of Opinions](https://www.boj.or.jp/en/mopo/mpmsche_minu/opinion_2026/opi260731.pdf),
+  August 10, 2026.
+- Ministry of Finance Japan, [Statement by Finance Minister Katayama](https://www.mof.go.jp/english/public_relations/statement/others/20260803073000.html),
+  August 3, 2026.

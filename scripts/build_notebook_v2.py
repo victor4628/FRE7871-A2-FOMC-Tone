@@ -116,7 +116,20 @@ probability is used.'''),
 language-associated component rather than a separate rate-surprise forecast.
 All four direction probabilities remain close to 50%, and the expected changes
 are small relative to residual uncertainty. These are low-confidence academic
-model outputs; no investment recommendation is made."""),
+model outputs; no investment recommendation is made.
+
+### Qualitative scenario analysis
+
+In a hawkish hold scenario, language that keeps a near-term hike firmly in play
+could raise two-year yields more than ten-year yields and produce a bear flattening
+of the 10s2s curve. In a hike scenario, the curve could steepen after its initial
+front-end reaction. The hike may reduce near-term inflation concerns and the
+perceived need for additional tightening, while persistent fiscal-deficit concerns
+and a higher term premium continue to place upward pressure on long-term Treasury
+yields. A wider U.S.-Japan interest-rate differential could also increase the
+probability that the Japanese authorities intervene by buying yen and selling
+dollars. Treasury's expanded long-end buybacks may partially offset the rise in
+long-term yields, but they are not assumed to be the dominant force."""),
  md('''## Comparison with the required readings
 
 **How You Say It Matters (2021).** That study separates qualitative wording from
