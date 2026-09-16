@@ -116,9 +116,9 @@ probability is used.'''),
 language-associated component rather than a separate rate-surprise forecast.
 All four direction probabilities remain close to 50%, and the expected changes
 are small relative to residual uncertainty. These are low-confidence academic
-model outputs; no investment recommendation is made.
+model outputs.
 
-### Qualitative scenario analysis
+### Personal recommendation
 
 In a hawkish hold scenario, language that keeps a near-term hike firmly in play
 could raise two-year yields more than ten-year yields and produce a bear flattening

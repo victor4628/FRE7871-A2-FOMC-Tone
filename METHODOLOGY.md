@@ -122,9 +122,9 @@ probability. DGS3MO is set to zero, so the market table is a conditional estimat
 of the language-associated component rather than a full unexpected-rate-action
 scenario. Because all four sign probabilities remain close to 50% and expected
 changes are small relative to residual uncertainty, they are presented only as
-low-confidence academic model outputs. No investment recommendation is made.
+low-confidence academic model outputs.
 
-## Qualitative scenario analysis
+## Personal recommendation
 
 This separate scenario discussion does not alter the model probabilities or its
 conditional market estimates. In a hawkish hold scenario, language that keeps a
